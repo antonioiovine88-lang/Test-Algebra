@@ -38,7 +38,7 @@
 <script>
 
 const quizDatabase = [
-    // --- FILE: 1.ElemTeoIns_Pegaso ---
+    // --- FILE: 1.ElemTeoIns ---
     { q: "Dati gli insiemi A={4,1,7}, B={1,7,-3}, quali delle seguenti affermazioni è vera?", o: ["a) A ⊂ B", "b) B ⊂ A", "c) A-B={4}", "d) A-B=4"], c: 2 },
     { q: "Introdotto l'insieme Z={0,{1},{1,2}}, quali delle seguenti affermazioni è falsa?", o: ["a) {1} ∈ Z", "b) {1} ⊂ Z", "c) {0,{1}} ⊂ Z", "d) {0,{1,2}} ⊂ Z"], c: 1 },
     { q: "Sia E l'insieme numerico sull'asse reale R dato da E={x∈R:x²-3x+2=0} ∩ {x∈R:x³-8=0}. Quali delle seguenti uguaglianze è corretta?", o: ["a) E={1,2}", "b) E={2}", "c) E=Ø", "d) E=2"], c: 1 },
@@ -50,7 +50,7 @@ const quizDatabase = [
     { q: "Se A, B, C, D sono quattro insiemi assegnati, quale fra le seguenti uguaglianze insiemistiche è vera?", o: ["a) (A∪B)x(C∪D)=(AxC)∪(BxC)∪(AxD)∪(BxD)", "b) (A∪B)x(C∪D)=((A∩C)x(B∩C))∪((A∩D)x(B∩D))", "c) (A∪B)x(C∪D)=(AxC)∪(BxD)", "d) (A∪B)x(C∪D)=(A∪C)x(B∪D)"], c: 0 },
     { q: "Se A, B, C sono tre insiemi assegnati (non vuoti), quale fra le seguenti uguaglianze insiemistiche è vera?", o: ["a) (A∪A^c)^c ∩ B=A", "b) (A∩A^c)^c ∪ B^c=B", "c) (A∪A^c)^c ∩ B=Ø", "d) (C∩C^c)^c ∪ C^c=C"], c: 2 },
     
-    // --- FILE: 2.AritmeticaModulare_Pegaso ---
+    // --- FILE: 2.AritmeticaModulare ---
     { q: "In Zn due numeri a e b sono congruenti modulo n se:", o: ["(A) a-b multiplo di n", "(B) a+b multiplo di n", "(C) a e b sono entrambi primi", "(D) n è un numero primo"], c: 0 },
     { q: "In Zn, la somma modulo n di 7 e 5 in Z10 è:", o: ["(A) 12", "(B) 2", "(C) 3", "(D) 5"], c: 1 },
     { q: "L'elemento a ∈ Zn è invertibile se e solo se:", o: ["(A) a è primo", "(B) a < n", "(C) gcd(a, n) = 1", "(D) n è dispari"], c: 2 },
@@ -73,7 +73,7 @@ const quizDatabase = [
     { q: "Sia A la matrice quadrata del terzo ordine [y, 0, z+x; 0, (x-1)^2, y; 0, -y, 2]. Quale è vera?", o: ["a) A è diagonale se e solo se (x,y,z)=(2,0,-2)", "b) A è una matrice unità se e solo se (x,y,z)=(2,0,-2)", "c) A è una matrice nulla", "d) Nessuna delle precedenti"], c: 3 },
     { q: "Siano a, b due numeri reali ed A, B matrici quadrate del secondo ordine A=[1, a; 0, b], B=[a, 0; 1, 0]. Se E={(a,b) : -A=Bt}, quale è vera?", o: ["a) E={(-1,0)}", "b) E={(0,-1)}", "c) E=Ø", "d) E=R²"], c: 2 },
 
-    // --- FILE: 4.SomComLin_Pegaso ---
+    // --- FILE: 4.SomComLin ---
     { q: "Siano A, B e C tre matrici di tipo (m,n), (p,q) ed (r,s). Quali condizioni devono soddisfare affinché A+Bt-C sia definita?", o: ["a) m=p=r, n=q=s", "b) m=q=r, n=p=s", "c) m=q=s, n=p=r", "d) m=p=s, n=q=r"], c: 1 },
     { q: "Per quali numeri reali a l'uguaglianza [a, a] + [0, 0; 0, 0] = [0, 0; a, a; 0, 0] è vera?", o: ["a) Per a=0", "b) Per ogni a", "c) Per nessun a", "d) Se e solo se a=1"], c: 2 },
     { q: "Siano A=[1 0 2; 0 0 -2; 3 1 0; 1 5 0] e B=[-1 1 0; 1 0 3; 0 1 2; 2 7 1]. Soluzione di A+Xt=B?", o: ["a) X=[-2, 1, -2; 1, 0, 5; -3, 0, 2; 1, 2, 1]", "b) X=[2, -1, 2; -1, 0, -5; 3, 0, -2; -1, -2, -1]", "c) X=[-2, 1, -3, 1; 1, 0, 0, 2; -2, 5, 2, 1]", "d) X=[2, -1, 3, -1; -1, 0, 0, -2; 2, -5, -2, -1]"], c: 2 },
@@ -86,7 +86,7 @@ const quizDatabase = [
     { q: "Vettori V1=[2, 0], V2=[1, 1], V3=[0, y]. Quale è vera?", o: ["a) V1, V2, V3 indipendenti per ogni y", "b) Almeno uno è comb. lin. degli altri se y=0", "c) Indipendenti se y != 0", "d) V1, V2, V3 linearmente dipendenti per ogni y"], c: 3 },
 
 
-// --- FILE: 5.ProPotMat_Pegaso ---
+// --- FILE: 5.ProPotMat ---
     { q: "Siano A, B, C le matrici date. Quali prodotti sono tutti eseguibili?", o: ["a) AB, AC, BC, CB", "b) CA, AC, BC, CB", "c) AB, CA, BA, AC", "d) BA, AC, BC, CB"], c: 3 },
     { q: "Determinare le coppie (x,y) per le quali AtX=B (con A, B, X matrici 2x2):", o: ["a) (x,y) qualsiasi", "b) nessuna coppia", "c) (x,y)=(2,1)", "d) (x,y)=(1,2)"], c: 2 },
     { q: "Sia C = a(AB+BA) - bI2. C è simmetrica se e solo se:", o: ["a) x=0, y=pi", "b) x=pi, y=0", "c) b=0", "d) x, y, a, b reali qualsiasi"], c: 3 },
@@ -98,7 +98,7 @@ const quizDatabase = [
     { q: "Siano A e B matrici quadrate linearmente dipendenti. Allora Ak e Bk sono dipendenti:", o: ["a) se e solo se k=1", "b) per ogni k intero positivo", "c) se e solo se A=I o B=I", "d) per nessun k>1"], c: 1 },
     { q: "Sia E l'insieme {(x,y) : P(Ax,y)=O2} con P(t)=t²-2t. Quale è corretta?", o: ["a) E=Ø", "b) E={(0,-2),(-2,0)}", "c) E=R²", "d) E={(0,2),(2,0)}"], c: 3 },
 
-    // --- FILE: 6.EseMatOpe_Pegaso ---
+    // --- FILE: 6.EseMatOpe ---
     { q: "Determinare a tale che A=Bt (A, B matrici 2x2):", o: ["a) a=±1", "b) Nessun valore di a", "c) a=1", "d) Tutti i valori"], c: 1 },
     { q: "Determinare a tale che At=B:", o: ["a) a=±1", "b) Nessun valore", "c) a=1", "d) Tutti"], c: 0 },
     { q: "Determinare a tale che At=B (con termine radice):", o: ["a) a=±1", "b) Nessun valore", "c) a=1", "d) Tutti"], c: 2 },
@@ -110,7 +110,7 @@ const quizDatabase = [
     { q: "Determinare l'insieme di derivabilità Dd della funzione matriciale F(t):", o: ["a) Dd=(-1,1)U(1,inf)", "b) Dd=(-1,0)U(0,1)U(1,inf)", "c) Dd=(-1,inf)", "d) Dd=(-1,0)U(0,inf)"], c: 1 },
     { q: "Sia F la funzione matriciale data. La matrice integrale tra 0 e 1 è:", o: ["a) [1/6 3/2; e-1 log2]", "b) [6/5 2/3; e 2log2]", "c) [5/6 2/3; e-1 2log2-1]", "d) [5/6 1/2; e 2log2-1]"], c: 2 },
 
-    // --- FILE: 7.EseAlgMat_Pegaso ---
+    // --- FILE: 7.EseAlgMat ---
     { q: "Siano P, Q matrici tali che -Q-6P=2I. Conseguenza:", o: ["a) P=-Q", "b) [P,Q]=I", "c) P=2Q", "d) [P,Q]=O"], c: 3 },
     { q: "Determinare x in A=[2 0; x 1] tale che A²-A=B:", o: ["a) x=3", "b) Nessun x", "c) x=2", "d) Per ogni x"], c: 3 },
     { q: "Siano AB=aI e BA=aI. È vero che AB=BA?", o: ["a) sì, sempre", "b) sì se a=0", "c) sì se e solo se m=n", "d) sì se m=n e a=0"], c: 2 },
@@ -122,7 +122,7 @@ const quizDatabase = [
     { q: "Sia K l'insieme dei k tali che A²-kA=2I2. Quale è corretta?", o: ["a) K=R", "b) K=Ø", "c) K={0}", "d) K={2}"], c: 0 },
     { q: "Sistema XY=O e YX=aIn. Quale è vera?", o: ["a) ammette soluzioni per ogni a", "b) non ammette soluzioni", "c) ammette soluzioni sse a=0", "d) ammette soluzioni sse a=1"], c: 2 },
 
-    // --- FILE: 8.SpaziVettoriali_Pegaso ---
+    // --- FILE: 8.SpaziVettoriali ---
     { q: "Dato V, v in V e W={w1...wh} indipendenti. Quale è necessariamente vera?", o: ["(A) L(v)=V", "(B) v è combinazione lineare di W", "(C) L(W U {v}) è un sottospazio di V", "(D) v non appartiene a W"], c: 2 },
     { q: "Quale tra le seguenti affermazioni è corretta (sottospazi)?", o: ["(A) Combinazione lin. in L(v)", "(B) Le rette sono spazi vettoriali", "(C) Due vettori sempre indipendenti", "(D) Se v in sottospazio, allora anche -v in sottospazio"], c: 3 },
     { q: "Indicare quale tra questi insiemi è linearmente indipendente:", o: ["(A) {(1,2), (4,-1), (5,1)}", "(B) {(1,0,1), (8,2,1)}", "(C) {(0,1,1), (0,2,2)}", "(D) Nessuno"], c: 1 },
@@ -134,7 +134,7 @@ const quizDatabase = [
     { q: "Quale tra questi non è uno (sotto) spazio vettoriale?", o: ["(A) L(0)", "(B) {(x+1,0)}", "(C) {a(3,1)}", "(D) R2"], c: 1 },
     { q: "Un insieme di vettori X si dice linearmente dipendente se:", o: ["(A) esistono due vettori nella chiusura", "(B) 0 è combinazione lineare", "(C) v è combinazione lineare", "(D) L(X)=L(X\\{v}) per qualche v in X"], c: 3 },
 
-    // --- FILE: 9.Dipensa_Base_Dimensione_Pegaso ---
+    // --- FILE: 9.Dipensa_Base_Dimensione ---
     { q: "Se B è una base di uno spazio vettoriale, allora:", o: ["(A) non esiste comb. lin. nulla", "(B) se v in B, allora v non in V", "(C) 0 appartiene a B", "(D) B è costituito dai vettori canonici"], c: 0 },
     { q: "Dati due sottospazi W1 e W2 di V:", o: ["(A) L'unione non può essere sottospazio", "(B) W1 dentro W2", "(C) La somma è V", "(D) L'intersezione contiene lo 0"], c: 3 },
     { q: "La formula di Grassmann:", o: ["(A) relaziona le basi", "(B) dim(W1+W2) >= dimW1+dimW2", "(C) dimW1+dimW2=dim(W1+W2)+dim(W1∩W2)", "(D) somma diretta sse intersezione=0"], c: 2 },
@@ -146,7 +146,7 @@ const quizDatabase = [
     { q: "Dati U=L((3,1,0),(0,0,1)) e W=L((3,1,5)) in R³:", o: ["(A) dim(U+W)=3", "(B) dim(U ∩ W)=1", "(C) U e W in somma diretta", "(D) U ∩ W=0"], c: 2 },
     { q: "Dato un insieme di generatori X di vettori linearmente dipendenti:", o: ["(A) esiste un sottoinsieme base", "(B) esiste v tale che somma diretta", "(C) X completato a base", "(D) |X| <= n"], c: 0 },
 	
-	// --- FILE: 10.ProdottoScalare_Pegaso ---
+	// --- FILE: 10.ProdottoScalare ---
     { q: "Il prodotto scalare tra due vettori u e v:", o: ["(A) è sempre positivo", "(B) è simmetrico u·v=v·u", "(C) ci restituisce uno scalare che indica la distanza tra u e v", "(D) è uguale a 0 se e solo se uno dei due vettori è 0"], c: 1 },
     { q: "La norma del vettore (2,-1,4.-2) è pari a:", o: ["(A) 5", "(B) rad(13)", "(C) 1", "(D) rad(15)"], c: 0 },
     { q: "Se u e v sono vettori ortogonali tra loro, allora:", o: ["(A) La loro somma vettoriale è il vettore nullo", "(B) L'angolo compreso tra i due vettori è l'angolo piatto", "(C) I due vettori sono linearmente indipendenti", "(D) au+bv è ortogonale a v per ogni a, b in R"], c: 2 },
@@ -170,7 +170,7 @@ const quizDatabase = [
     { q: "Dato uno spazio V di dim 5 e sottospazio W di dim 3:", o: ["(A) dim(W)+dim(Wp) < 5", "(B) Wp = {v | x+v=0}", "(C) W U Wp = V", "(D) Data base B di W e Bp di Wp, B U Bp è base di V"], c: 3 },
     { q: "Se due vettori v e u sono ortogonali tra loro:", o: ["(A) ogni w ortogonale a v è ortogonale a u", "(B) u appartiene al complemento ortogonale di v", "(C) u e v sono linearmente dipendenti", "(D) la proiezione di u su v non è ortogonale a u"], c: 1 },
 
-    // --- FILE: 12.SistLinRangoDeterm_Pegaso ---
+    // --- FILE: 12.SistLinRangoDeterm ---
     { q: "Un sistema lineare:", o: ["(A) Ha sempre una soluzione se la matrice è quadrata", "(B) Non può avere due soluzioni", "(C) Ha sempre soluzione se le colonne sono indipendenti", "(D) Può non avere soluzioni"], c: 3 },
     { q: "La matrice [2 0 1; 4 1 2; 0 2 0] ha rango:", o: ["(A) non determinabile", "(B) 1", "(C) 2", "(D) 3"], c: 3 },
     { q: "Quale è un minore di ordine 2 della matrice [1 0 1; 2 -1 0; 1 1 0; 3 9 1]?", o: ["(A) [1 1; 4 6]", "(B) [2 3; 0 1]", "(C) [1 0; 2 -1; 3 9]", "(D) [1 0; 4 9]"], c: 1 },
@@ -182,7 +182,7 @@ const quizDatabase = [
     { q: "Se una matrice A ha rango pari a 2:", o: ["(A) Ci sono due righe dipendenti", "(B) Ammette due minori con determinante non nullo", "(C) Ha al più due righe", "(D) Non se ne calcola il det"], c: 1 },
     { q: "Quale affermazione è corretta (determinante)?", o: ["(A) Se colonne indipendenti allora det != 0", "(B) det(An) = det(A)^n", "(C) rho(A)=det(A) se det != 0", "(D) det(aA)=0 sse a=0"], c: 1 },
 
-    // --- FILE: 13.CompRisSistLinea_Pegaso ---
+    // --- FILE: 13.CompRisSistLinea ---
     { q: "Un sistema lineare con 3 equazioni e 4 incognite:", o: ["(A) Non può ammettere soluzione unica", "(B) Ammette sempre almeno una soluzione", "(C) Matrice estesa 3x4", "(D) Nessuna"], c: 0 },
     { q: "Applicando Rouche-Capelli, il sistema {x+2y-z=0; -2x-3y+z=1; y-z=1}:", o: ["(A) Unica soluzione", "(B) Non ammette soluzioni", "(C) Infinite soluzioni", "(D) Non applicabile"], c: 1 },
     { q: "Le trasformazioni elementari di Gauss:", o: ["(A) Preservano l'insieme delle soluzioni", "(B) Danno la matrice identità", "(C) Valide solo per compatibili", "(D) Pivot a destra"], c: 0 },
@@ -194,7 +194,7 @@ const quizDatabase = [
     { q: "Data A quadrata, Ax=b non è compatibile:", o: ["(A) se det(A)=0", "(B) quando ci sono infinite soluzioni", "(C) quando rho(A|b)=rho(b)", "(D) se det(A)=0 ma b è indipendente dalle colonne"], c: 3 },
     { q: "Se la matrice A ridotta ha un pivot in ogni riga:", o: ["(A) Ax=0 ha unica soluzione", "(B) Ax=b è compatibile per ogni b", "(C) Ax=e1 ha unica soluzione", "(D) Ax=0 non compatibile"], c: 1 },
 
-    // --- FILE: 14.ApplLine_Pegaso ---
+    // --- FILE: 14.ApplLine ---
     { q: "Quale non è una condizione di applicazione lineare?", o: ["(A) T(u+v)=T(u)+T(v)", "(B) T(lv)=lT(v)", "(C) T(0)=0", "(D) T(u*v)=T(u)*T(v)"], c: 3 },
     { q: "Sia T(x,y)=(3x,3y). Quale è vera?", o: ["(A) T non è lineare", "(B) T è lineare", "(C) sse x=y", "(D) sse x+y=0"], c: 1 },
     { q: "Matrice associata a T(x,y)=(x+2y, 3x-y) rispetto alla canonica:", o: ["(A) [1 2; 3 -1]", "(B) [2 1; -1 3]", "(C) [1 3; 2 -1]", "(D) [0 2; 3 0]"], c: 0 },
@@ -206,7 +206,7 @@ const quizDatabase = [
     { q: "Sia Ax=b compatibile. xp soluzione particolare, Sh soluzioni omogeneo. Tutte le soluzioni sono:", o: ["(A) x=xp+y, y in Rr", "(B) xp unica", "(C) ogni soluzione omogeneo è x1", "(D) x=xp+y, y in Sh"], c: 3 },
     { q: "Sistema Ax=b con xp e Sh di dim 2. Quante soluzioni ha?", o: ["(A) Infinite, formano insieme affine dim 2", "(B) Infinite, formano spazio vettoriale dim 2", "(C) Nessuna", "(D) Esattamente una"], c: 0 },
 	
-	// --- FILE: 15.AutoAuto_Pegaso ---
+	// --- FILE: 15.AutoAuto ---
     { q: "Sia A una matrice quadrata n x n. Quale delle seguenti affermazioni è vera?", o: ["(A) Ogni matrice quadrata ha solo autovalori reali", "(B) Gli autovalori di A sono le soluzioni dell'equazione det(A-λI)=0", "(C) Ogni autovettore è una combinazione lineare degli autovalori", "(D) Gli autovalori sono i minori principali della matrice"], c: 1 },
     { q: "L'equazione caratteristica della matrice A=([2 1; 1 2]) è:", o: ["(A) λ²+4λ+3=0", "(B) λ²-4=0", "(C) λ²-4λ+5=0", "(D) λ²-4λ+3=0"], c: 3 },
     { q: "Gli autovalori della matrice A=([2 1; 1 2]) sono:", o: ["(A) 1, 2", "(B) 4, -1", "(C) 3, 1", "(D) 2, 2"], c: 2 },
@@ -218,7 +218,7 @@ const quizDatabase = [
     { q: "Sia A una matrice 5x5. Se 42 non è un autovalore di A, allora:", o: ["(A) per nessun v vale Av=42v", "(B) det(A-42I)=0", "(C) dim(ker(A-42I))≠0", "(D) il polinomio caratteristico di A è divisibile per (x-42)"], c: 0 },
     { q: "Per quale dei seguenti polinomi il numero 5 è radice di molteplicità due?", o: ["(A) (x-5)²+(x+5)²", "(B) (x-5)(x²-25)", "(C) (x+1)(x²-25)", "(D) (x-5)²(x²-25)"], c: 1 },
 
-    // --- FILE: 16.MatSimiDiago_Pegaso ---
+    // --- FILE: 16.MatSimiDiago ---
     { q: "Sia B={v1,v2} una base di R2 con v1=(1,1), v2=(1,-1). Coordinate di w=(2,0) rispetto a B:", o: ["(A) (2,0)", "(B) (1,-1)", "(C) (1,1)", "(D) (1,1) rispetto alla canonica"], c: 2 },
     { q: "La matrice di cambiamento di base da una base B a una base B' è:", o: ["(A) la matrice identità", "(B) una matrice tale che AAt=I", "(C) la matrice che porta le coordinate da B a B'", "(D) la matrice dei vettori della base B scritti rispetto a B'"], c: 3 },
     { q: "Due matrici quadrate A e B si dicono simili se:", o: ["(A) hanno lo stesso rango", "(B) rappresentano la stessa applicazione lineare rispetto a basi diverse", "(C) sono entrambe triangolari", "(D) hanno gli stessi autovettori"], c: 1 },
@@ -301,3 +301,4 @@ window.onload = init;
 </script>
 </body>
 </html>
+
