@@ -5,10 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulatore Algebra</title>
     <style>
-        :root { --primary: #1a508b; --success: #28a745; --error: #dc3545; --bg: #f4f7fa; }
+        :root { --primary: #1a508b; --success: #28a745; --error: #dc3545; --bg: #f4f7fa; --secondary: #6c757d; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 10px; display: flex; justify-content: center; }
         .quiz-container { background: white; width: 100%; max-width: 600px; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         h1 { color: var(--primary); text-align: center; font-size: 1.5rem; margin-bottom: 20px; }
+        
+        /* Nuovi stili per il controllo ordine */
+        .controls { margin-bottom: 15px; display: flex; justify-content: center; }
+        .mode-btn { 
+            background: #eef2f7; color: #333; border: 1px solid #ddd; 
+            padding: 8px 15px; border-radius: 20px; cursor: pointer; 
+            font-size: 0.85rem; transition: 0.3s; width: auto; 
+        }
+        .mode-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+
         .stats { display: flex; justify-content: space-between; background: #eef2f7; padding: 12px; border-radius: 10px; margin-bottom: 20px; font-weight: bold; font-size: 0.9rem; }
         .question-text { font-size: 1.1rem; line-height: 1.4; color: #333; margin-bottom: 15px; min-height: 60px; }
         .options-grid { display: grid; gap: 10px; }
@@ -16,20 +26,25 @@
         .option.correct { background: #d4edda !important; border-color: var(--success) !important; color: #155724; font-weight: bold; }
         .option.wrong { background: #f8d7da !important; border-color: var(--error) !important; color: #721c24; }
         #feedback { text-align: center; font-weight: bold; margin: 15px 0; height: 20px; font-size: 1.1rem; }
-        button { background: var(--primary); color: white; border: none; padding: 15px; border-radius: 30px; cursor: pointer; width: 100%; font-size: 1.1rem; font-weight: bold; transition: 0.3s; }
-        button:disabled { background: #ccc; }
+        #main-btn { background: var(--primary); color: white; border: none; padding: 15px; border-radius: 30px; cursor: pointer; width: 100%; font-size: 1.1rem; font-weight: bold; transition: 0.3s; }
+        #main-btn:disabled { background: #ccc; cursor: not-allowed; }
     </style>
 </head>
 <body>
 
 <div class="quiz-container">
     <h1>Esercitazione Algebra</h1>
+    
+    <div class="controls">
+        <button id="mode-toggle" class="mode-btn" onclick="toggleRandom()">Ordine: Sequenziale</button>
+    </div>
+
     <div class="stats">
         <span>Domanda: <span id="current-q">0</span> / <span id="total-q">0</span></span>
         <span>Punteggio: <span id="score">0</span></span>
     </div>
 
-    <div id="q-text" class="question-text">Seleziona una risposta per verificare...</div>
+    <div id="q-text" class="question-text">Caricamento...</div>
     <div id="options" class="options-grid"></div>
     <div id="feedback"></div>
     <button id="main-btn" onclick="handleAction()" disabled>Scegli una risposta</button>
@@ -37,13 +52,13 @@
 
 <script>
 
-const quizDatabase = [
+const originalDatabase = [
     // --- FILE: 1.ElemTeoIns ---
     { q: "Dati gli insiemi A={4,1,7}, B={1,7,-3}, quali delle seguenti affermazioni è vera?", o: ["a) A ⊂ B", "b) B ⊂ A", "c) A-B={4}", "d) A-B=4"], c: 2 },
     { q: "Introdotto l'insieme Z={0,{1},{1,2}}, quali delle seguenti affermazioni è falsa?", o: ["a) {1} ∈ Z", "b) {1} ⊂ Z", "c) {0,{1}} ⊂ Z", "d) {0,{1,2}} ⊂ Z"], c: 1 },
     { q: "Sia E l'insieme numerico sull'asse reale R dato da E={x∈R:x²-3x+2=0} ∩ {x∈R:x³-8=0}. Quali delle seguenti uguaglianze è corretta?", o: ["a) E={1,2}", "b) E={2}", "c) E=Ø", "d) E=2"], c: 1 },
     { q: "Quali sono tutti e soli i valori di x per i quali è vera l'uguaglianza insiemistica {x,x-1}={0,1}?", o: ["a) x=0", "b) Nessun x", "c) x=-1", "d) x=1"], c: 3 },
-    { q: "Quali sono tutti e soli i valori di x per i quali è vera l'uguaglianza fra coppie ordinate (x-2,x+1)=(2x,1)?", o: ["a) nessun x", "b) x=-2", "c) x=0", "d) x=1"], c: 2 },
+    { q: "Quali sono tutti e soli i valori di x per i quali è vera l'uguaglianza fra coppie ordinate (x-2,x+1)=(2x,1)?", o: ["a) nessun x", "b) x=-2", "c) x=0", "d) x=1"], c: 0 },
     { q: "Dato l'insieme E={0,1,-1} quale, fra i seguenti, è l'insieme P(E) delle parti di E?", o: ["a) P(E)={{0},{-1},{1}}", "b) P(E)={0,1,-1,{0,-1},{-1,1},{0,1}}", "c) P(E) = {0, 1, -1, {0, 1}, {−1, 1}, {0, 1}, Ø, E}", "d) P(E)={{0},{1},{-1},{0,-1},{-1,1},{0,1},Ø,E}"], c: 3 },
     { q: "Siano A e B due insiemi generici contenuti in un insieme universo X (con A, B non vuoti). Quale delle seguenti affermazioni è vera?", o: ["a) (A∪B) ∩ Ø = X", "b) A^c ∩ A = A", "c) B ∩ B^c = Ø", "d) A-B=Ø => A=B"], c: 2 },
     { q: "Considerato, per ogni n∈N-{0}, l'intervallo In=(-1/n, 1], quali delle seguenti è vera?", o: ["a) ∩In = Ø", "b) ∩In = [0,1]", "c) ∩In = {1}", "d) ∪In = (0,1)"], c: 1 },
@@ -54,33 +69,33 @@ const quizDatabase = [
     { q: "In Zn due numeri a e b sono congruenti modulo n se:", o: ["(A) a-b multiplo di n", "(B) a+b multiplo di n", "(C) a e b sono entrambi primi", "(D) n è un numero primo"], c: 0 },
     { q: "In Zn, la somma modulo n di 7 e 5 in Z10 è:", o: ["(A) 12", "(B) 2", "(C) 3", "(D) 5"], c: 1 },
     { q: "L'elemento a ∈ Zn è invertibile se e solo se:", o: ["(A) a è primo", "(B) a < n", "(C) gcd(a, n) = 1", "(D) n è dispari"], c: 2 },
-    { q: "Calcolare l'inverso di 3 in Z7", o: ["(A) l'inverso è 2", "(B) l'inverso è 5", "(C) l'inverso è 4", "(D) l'inverso è 3"], c: 2 },
+    { q: "Calcolare l'inverso di 3 in Z7", o: ["(A) l'inverso è 2", "(B) l'inverso è 5", "(C) l'inverso è 4", "(D) l'inverso è 3"], c: 1 },
     { q: "Il metodo di fattorizzazione di Fermat si basa su:", o: ["(A) scrivere un numero come differenza di due quadrati", "(B) scrivere un numero come somma di due quadrati", "(C) calcolare il massimo comune divisore", "(D) trovare l'inverso modulo n"], c: 0 },
     { q: "Usando il metodo di Fermat, fattorizzare n=595", o: ["(A) abbiamo n=5*119", "(B) abbiamo n=35*17", "(C) abbiamo n=29*21", "(D) abbiamo n=13*47"], c: 1 },
-    { q: "Quanto vale 17^12 (mod 51):", o: ["(A) vale 17", "(B) vale 1", "(C) vale 34", "(D) non è calcolabile esattamente"], c: 0 },
+    { q: "Quanto vale 17^12 (mod 51):", o: ["(A) vale 17", "(B) vale 1", "(C) vale 34", "(D) non è calcolabile esattamente"], c: 2 },
     { q: "Nel cifrario a sostituzione semplice:", o: ["(A) ogni lettera è sostituita sempre dalla stessa lettera cifrata", "(B) ogni lettera è sostituita da una cifra casuale diversa", "(C) il testo cifrato è sempre più lungo", "(D) si usa una matrice di permutazione"], c: 0 },
     { q: "L'analisi delle frequenze sfrutta:", o: ["(A) la distribuzione uniforme delle lettere", "(B) le diverse frequenze delle lettere", "(C) la lunghezza fissa delle parole", "(D) la conoscenza della chiave"], c: 1 },
     
     // --- FILE: 3.MatOpeBase ---
     { q: "Data la matrice A=[1 1 1; 1 1 1] quale delle seguenti affermazioni è vera?", o: ["a) A è una matrice rettangolare di tipo (3,2)", "b) A è una matrice unità", "c) A è una matrice rettangolare di tipo (2,3)", "d) A è una matrice simmetrica"], c: 2 },
     { q: "Data la matrice quadrata A=[1 z x; z 2 0; -x 0 3] dove z e x sono numeri reali, quale è vera?", o: ["a) A è simmetrica se e solo se x=0", "b) A è antisimmetrica se e solo se z=0", "c) A è diagonale se x=0 e z=1", "d) A è diagonale se x=1 e z=0"], c: 0 },
-    { q: "Data la matrice quadrata A=[x y; y -x] dove x e y sono numeri reali, quale è vera?", o: ["a) A è antisimmetrica se e solo se y=0 per ogni x", "b) A è simmetrica per ogni x e per ogni y", "c) A è antisimmetrica se e solo se x=0, per ogni y", "d) A è triangolare superiore se e solo se x=0, per ogni y"], c: 2 },
+    { q: "Data la matrice quadrata A=[x y; y -x] dove x e y sono numeri reali, quale è vera?", o: ["a) A è antisimmetrica se e solo se y=0 per ogni x", "b) A è simmetrica per ogni x e per ogni y", "c) A è antisimmetrica se e solo se x=0, per ogni y", "d) A è triangolare superiore se e solo se x=0, per ogni y"], c: 1 },
     { q: "Per quali t in R risulta vera l'uguaglianza [t, t+1; 2-t, t-1]=[1, 3; 0, 1]?", o: ["a) Per nessun t", "b) Per qualche t", "c) Per t intero pari", "d) Per t intero dispari"], c: 0 },
     { q: "Siano S ed A gli insiemi delle matrici quadrate rispettivamente simmetriche ed antisimmetriche. Quale è vera?", o: ["a) S ∩ A = {On, In}", "b) S ∩ A = {In}", "c) S ∩ A = Ø", "d) S ∩ A = {On}"], c: 3 },
     { q: "Data la matrice A=[1 0 2 -3; 4 0 1 5; 0 1 2 1] quale è vera?", o: ["a) A è tipo (3,4) e At=[0 1 2 1; 4 0 1 5; 1 0 2 -3]", "b) A è tipo (3,4) e At=[1 4 0; 0 0 1; 2 1 2; -3 5 1]", "c) A è tipo (4,3)", "d) A è tipo (4,3)"], c: 1 },
     { q: "Sia A una matrice di tipo (m,n). Quale delle seguenti uguaglianze matriciali è corretta?", o: ["a) (-(-A)^t)^t = A", "b) ((-A)^t)^t = A^t", "c) ((-A)^t)^t = -A^t", "d) (-(-A)^t)^t = -A"], c: 0 },
     { q: "Sia B l'insieme delle matrici quadrate così definito B={[1, a; -a, 1] : a in R}. Quale è vera?", o: ["a) -B in B", "b) -Bt in B", "c) Bt in B", "d) Bt in B se e solo se B=I2"], c: 2 },
     { q: "Sia A la matrice quadrata del terzo ordine [y, 0, z+x; 0, (x-1)^2, y; 0, -y, 2]. Quale è vera?", o: ["a) A è diagonale se e solo se (x,y,z)=(2,0,-2)", "b) A è una matrice unità se e solo se (x,y,z)=(2,0,-2)", "c) A è una matrice nulla", "d) Nessuna delle precedenti"], c: 3 },
-    { q: "Siano a, b due numeri reali ed A, B matrici quadrate del secondo ordine A=[1, a; 0, b], B=[a, 0; 1, 0]. Se E={(a,b) : -A=Bt}, quale è vera?", o: ["a) E={(-1,0)}", "b) E={(0,-1)}", "c) E=Ø", "d) E=R²"], c: 2 },
+    { q: "Siano a, b due numeri reali ed A, B matrici quadrate del secondo ordine A=[1, a; 0, b], B=[a, 0; 1, 0]. Se E={(a,b) : -A=Bt}, quale è vera?", o: ["a) E={(-1,0)}", "b) E={(0,-1)}", "c) E=Ø", "d) E=R²"], c: 0 },
 
     // --- FILE: 4.SomComLin ---
     { q: "Siano A, B e C tre matrici di tipo (m,n), (p,q) ed (r,s). Quali condizioni devono soddisfare affinché A+Bt-C sia definita?", o: ["a) m=p=r, n=q=s", "b) m=q=r, n=p=s", "c) m=q=s, n=p=r", "d) m=p=s, n=q=r"], c: 1 },
     { q: "Per quali numeri reali a l'uguaglianza [a, a] + [0, 0; 0, 0] = [0, 0; a, a; 0, 0] è vera?", o: ["a) Per a=0", "b) Per ogni a", "c) Per nessun a", "d) Se e solo se a=1"], c: 2 },
     { q: "Siano A=[1 0 2; 0 0 -2; 3 1 0; 1 5 0] e B=[-1 1 0; 1 0 3; 0 1 2; 2 7 1]. Soluzione di A+Xt=B?", o: ["a) X=[-2, 1, -2; 1, 0, 5; -3, 0, 2; 1, 2, 1]", "b) X=[2, -1, 2; -1, 0, -5; 3, 0, -2; -1, -2, -1]", "c) X=[-2, 1, -3, 1; 1, 0, 0, 2; -2, 5, 2, 1]", "d) X=[2, -1, 3, -1; -1, 0, 0, -2; 2, -5, -2, -1]"], c: 2 },
     { q: "Quale delle seguenti somme matriciali è corretta?", o: ["a) [2, 1] + [0, 3] = [2, 1, 0, 3]", "b) [1; 0] + [0; -1] = [1, 0; 0, -1]", "c) [2, 1]t + [0, 3]t = [2, 4]", "d) [1; 0]t + [0; -1]t = [1, -1]"], c: 3 },
-    { q: "Determinare a, b, g tali che E-F sia diagonale (E=[0 2 -2a; a 3 1; 0 5a b], F=[8 b -2; g 1 1; 0 5 4])", o: ["a) a=1, b=2, g=1", "b) a=1, b=4, g=1", "c) a=2, b=2, g=2", "d) a=2, b=4, g=2"], c: 1 },
+    { q: "Determinare a, b, g tali che E-F sia diagonale (E=[0 2 -2a; a 3 1; 0 5a b], F=[8 b -2; g 1 1; 0 5 4])", o: ["a) a=1, b=2, g=1", "b) a=1, b=4, g=1", "c) a=2, b=2, g=2", "d) a=2, b=4, g=2"], c: 0 },
     { q: "Siano A=[2, x; y^3-1, 3x^2] e B=[1, y-x; 5(y^2-x^4), 1]. Per quali x, y la matrice 2At-xB+2A-xBt è simmetrica?", o: ["a) x=0 e y=1", "b) x=1 e y=0", "c) nessun valore", "d) ogni valore di x ed y"], c: 3 },
-    { q: "Sia A quadrata e B=xA-yAt. Quale è corretta?", o: ["a) B è antisimmetrica se e solo se x=y", "b) B è antisimmetrica se e solo se A è antisimmetrica", "c) B è antisimmetrica se e solo se A=On", "d) B è antisimmetrica se e solo se x=y oppure A è antisimmetrica"], c: 0 },
+    { q: "Sia A quadrata e B=xA-yAt. Quale è corretta?", o: ["a) B è antisimmetrica se e solo se x=y", "b) B è antisimmetrica se e solo se A è antisimmetrica", "c) B è antisimmetrica se e solo se A=On", "d) B è antisimmetrica se e solo se x=y oppure A è antisimmetrica"], c: 3 },
     { q: "Siano A, B matrici simmetriche. C=aA+bB è:", o: ["a) simmetrica se e solo se a=b=1", "b) simmetrica se e solo se a=0 o b=0", "c) simmetrica per ogni valore di a e b", "d) simmetrica se e solo se A=B"], c: 2 },
     { q: "Vettori U1=[1; 0] e U2=[t; t-1]. Per quali t sono linearmente indipendenti?", o: ["a) t=0 o t=1", "b) tutti i valori t != 1", "c) nessun valore", "d) qualsiasi valore"], c: 1 },
     { q: "Vettori V1=[2, 0], V2=[1, 1], V3=[0, y]. Quale è vera?", o: ["a) V1, V2, V3 indipendenti per ogni y", "b) Almeno uno è comb. lin. degli altri se y=0", "c) Indipendenti se y != 0", "d) V1, V2, V3 linearmente dipendenti per ogni y"], c: 3 },
@@ -99,11 +114,11 @@ const quizDatabase = [
     { q: "Sia E l'insieme {(x,y) : P(Ax,y)=O2} con P(t)=t²-2t. Quale è corretta?", o: ["a) E=Ø", "b) E={(0,-2),(-2,0)}", "c) E=R²", "d) E={(0,2),(2,0)}"], c: 3 },
 
     // --- FILE: 6.EseMatOpe ---
-    { q: "Determinare a tale che A=Bt (A, B matrici 2x2):", o: ["a) a=±1", "b) Nessun valore di a", "c) a=1", "d) Tutti i valori"], c: 1 },
-    { q: "Determinare a tale che At=B:", o: ["a) a=±1", "b) Nessun valore", "c) a=1", "d) Tutti"], c: 0 },
+    { q: "Determinare a tale che A=Bt (A, B matrici 2x2):", o: ["a) a=±1", "b) Nessun valore di a", "c) a=1", "d) Tutti i valori"], c: 2 },
+    { q: "Determinare a tale che At=B:", o: ["a) a=±1", "b) Nessun valore", "c) a=1", "d) Tutti"], c: 3 },
     { q: "Determinare a tale che At=B (con termine radice):", o: ["a) a=±1", "b) Nessun valore", "c) a=1", "d) Tutti"], c: 2 },
-    { q: "Determinare a, b per i quali la matrice Aa,b risulta simmetrica:", o: ["a) a=±1, b=0", "b) Nessun valore di a, b", "c) a=1/2, b=1/2", "d) a=-1/2, b=-1/2"], c: 1 },
-    { q: "Determinare a, b, g per i quali Aa,b,g risulta antisimmetrica:", o: ["a) a=4^(1/3), b=0, g=0", "b) a=0, b=0, g=0", "c) a=0, b=pi, g=0", "d) a=0, b=2k*pi, g=0"], c: 2 },
+    { q: "Determinare a, b per i quali la matrice Aa,b risulta simmetrica:", o: ["a) a=±1, b=0", "b) Nessun valore di a, b", "c) a=1/2, b=1/2", "d) a=-1/2, b=-1/2"], c: 2 },
+    { q: "Determinare a, b, g per i quali Aa,b,g risulta antisimmetrica:", o: ["a) a=4^(1/3), b=0, g=0", "b) a=0, b=0, g=0", "c) a=0, b=pi, g=0", "d) a=0, b=2k*pi, g=0"], c: 3 },
     { q: "Determinare il dominio D della funzione F(t) con radice di logaritmo:", o: ["a) D={t : |t|>=rad2}", "b) D={t : |t|>1}", "c) D={t : t!=±1}", "d) D=R"], c: 0 },
     { q: "Determinare a per cui Fa(t) è continua su tutto R:", o: ["a) Nessun a", "b) Tutti", "c) a=2", "d) a=k, k intero"], c: 3 },
     { q: "Determinare b per cui la matrice derivata dFb/dt(0) risulti simmetrica:", o: ["a) b=±1/2", "b) Tutti", "c) b=±1/rad2", "d) b=±2"], c: 0 },
@@ -111,15 +126,15 @@ const quizDatabase = [
     { q: "Sia F la funzione matriciale data. La matrice integrale tra 0 e 1 è:", o: ["a) [1/6 3/2; e-1 log2]", "b) [6/5 2/3; e 2log2]", "c) [5/6 2/3; e-1 2log2-1]", "d) [5/6 1/2; e 2log2-1]"], c: 2 },
 
     // --- FILE: 7.EseAlgMat ---
-    { q: "Siano P, Q matrici tali che -Q-6P=2I. Conseguenza:", o: ["a) P=-Q", "b) [P,Q]=I", "c) P=2Q", "d) [P,Q]=O"], c: 3 },
-    { q: "Determinare x in A=[2 0; x 1] tale che A²-A=B:", o: ["a) x=3", "b) Nessun x", "c) x=2", "d) Per ogni x"], c: 3 },
-    { q: "Siano AB=aI e BA=aI. È vero che AB=BA?", o: ["a) sì, sempre", "b) sì se a=0", "c) sì se e solo se m=n", "d) sì se m=n e a=0"], c: 2 },
-    { q: "Sia A antisimmetrica e B=A². Quale è vera?", o: ["a) B è simmetrica", "b) B è antisimmetrica", "c) né simmetrica né antisimmetrica", "d) A e B non permutabili"], c: 0 },
-    { q: "Siano A, B permutabili. Quale è vera sempre?", o: ["a) A e Bt permutabili", "b) At e Bt sono permutabili", "c) solo se A=O o B=O", "d) solo se A=I o B=I"], c: 1 },
-    { q: "Siano A ed X. AX=0 per ogni vettore X:", o: ["a) per ogni scelta", "b) se a=e-1, b=1+log2, g=3", "c) per nessuna scelta", "d) se a=0, b=1, g=2"], c: 3 },
-    { q: "Sia A una matrice idempotente. Quale è vera?", o: ["a) At è idempotente sse A=O o A=I", "b) (At)t non è idempotente", "c) At è idempotente", "d) At è idempotente sse A è simmetrica"], c: 2 },
-    { q: "Sistema X^N=O e XY=In. Quale è vera?", o: ["a) ammette soluzioni se N>=2", "b) se N è pari", "c) se N è dispari", "d) non ammette soluzioni per nessun N"], c: 3 },
-    { q: "Sia K l'insieme dei k tali che A²-kA=2I2. Quale è corretta?", o: ["a) K=R", "b) K=Ø", "c) K={0}", "d) K={2}"], c: 0 },
+    { q: "Siano P, Q matrici tali che -Q-6P=2I. Conseguenza:", o: ["a) P=-Q", "b) [P,Q]=I", "c) P=2Q", "d) [P,Q]=O"], c: 2 },
+    { q: "Determinare x in A=[2 0; x 1] tale che A²-A=B:", o: ["a) x=3", "b) Nessun x", "c) x=2", "d) Per ogni x"], c: 1 },
+    { q: "Siano AB=aI e BA=aI. È vero che AB=BA?", o: ["a) sì, sempre", "b) sì se a=0", "c) sì se e solo se m=n", "d) sì se m=n e a=0"], c: 3 },
+    { q: "Sia A antisimmetrica e B=A². Quale è vera?", o: ["a) B è simmetrica", "b) B è antisimmetrica", "c) né simmetrica né antisimmetrica", "d) A e B non permutabili"], c: 2 },
+    { q: "Siano A, B permutabili. Quale è vera sempre?", o: ["a) A e Bt permutabili", "b) At e Bt sono permutabili", "c) solo se A=O o B=O", "d) solo se A=I o B=I"], c: 3 },
+    { q: "Siano A ed X. AX=0 per ogni vettore X:", o: ["a) per ogni scelta", "b) se a=e-1, b=1+log2, g=3", "c) per nessuna scelta", "d) se a=0, b=1, g=2"], c: 0 },
+    { q: "Sia A una matrice idempotente. Quale è vera?", o: ["a) At è idempotente sse A=O o A=I", "b) (At)t non è idempotente", "c) At è idempotente", "d) At è idempotente sse A è simmetrica"], c: 3 },
+    { q: "Sistema X^N=O e XY=In. Quale è vera?", o: ["a) ammette soluzioni se N>=2", "b) se N è pari", "c) se N è dispari", "d) non ammette soluzioni per nessun N"], c: 0 },
+    { q: "Sia K l'insieme dei k tali che A²-kA=2I2. Quale è corretta?", o: ["a) K=R", "b) K=Ø", "c) K={0}", "d) K={2}"], c: 1 },
     { q: "Sistema XY=O e YX=aIn. Quale è vera?", o: ["a) ammette soluzioni per ogni a", "b) non ammette soluzioni", "c) ammette soluzioni sse a=0", "d) ammette soluzioni sse a=1"], c: 2 },
 
     // --- FILE: 8.SpaziVettoriali ---
@@ -135,16 +150,16 @@ const quizDatabase = [
     { q: "Un insieme di vettori X si dice linearmente dipendente se:", o: ["(A) esistono due vettori nella chiusura", "(B) 0 è combinazione lineare", "(C) v è combinazione lineare", "(D) L(X)=L(X\\{v}) per qualche v in X"], c: 3 },
 
     // --- FILE: 9.Dipensa_Base_Dimensione ---
-    { q: "Se B è una base di uno spazio vettoriale, allora:", o: ["(A) non esiste comb. lin. nulla", "(B) se v in B, allora v non in V", "(C) 0 appartiene a B", "(D) B è costituito dai vettori canonici"], c: 0 },
-    { q: "Dati due sottospazi W1 e W2 di V:", o: ["(A) L'unione non può essere sottospazio", "(B) W1 dentro W2", "(C) La somma è V", "(D) L'intersezione contiene lo 0"], c: 3 },
-    { q: "La formula di Grassmann:", o: ["(A) relaziona le basi", "(B) dim(W1+W2) >= dimW1+dimW2", "(C) dimW1+dimW2=dim(W1+W2)+dim(W1∩W2)", "(D) somma diretta sse intersezione=0"], c: 2 },
+    { q: "Se B è una base di uno spazio vettoriale, allora:", o: ["(A) non esiste comb. lin. nulla", "(B) se v appartiene a B, allora −v non appartiene a B", "(C) 0 appartiene a B", "(D) B è costituito dai vettori canonici"], c: 1 },
+    { q: "Dati due sottospazi W1 e W2 di V:", o: ["(A) L'unione non può essere sottospazio", "(B) W1 dentro W2", "(C) La somma è V", "(D) L'intersezione contiene il vettore nullo 0"], c: 3 },
+    { q: "La formula di Grassmann:", o: ["(A) relaziona le basi", "(B) dim(W1+W2) >= dimW1+dimW2", "(C) dimW1+dimW2=dim(W1+W2)+dim(W1∩W2)", "(D) somma diretta sse intersezione=0"], c: 3 },
     { q: "In dim 15, U dim 8 e W dim 7. Allora:", o: ["(A) Base U da W + 1 vettore", "(B) 8 <= dim(U+W) <= 15", "(C) V != U+W", "(D) Nessuna"], c: 1 },
     { q: "Dati due sottospazi vettoriali U e W, allora:", o: ["(A) se U c W, ogni base di U completata a W", "(B) U+W dim almeno dimU+dimW", "(C) U ∩ W = 0", "(D) vettore non in U+W"], c: 0 },
     { q: "Quale delle seguenti è una base di R³?", o: ["(A) {(0,1,8), (1,0,3), (1,1,0)}", "(B) L({(1,0,1), (0,1,0), (0,0,1)})", "(C) {(1,0,0), (2,3,1), (-1,4,5), (0,1,5)}", "(D) {(2,1,1), (-1,2,0), (1,3,1)}"], c: 0 },
     { q: "Quale delle seguenti affermazioni è corretta (completamento)?", o: ["(A) Sempre completare a base", "(B) Somma diretta non si intersecano", "(C) In dim n, n+1 vettori sempre dipendenti", "(D) Base chiusa linearmente"], c: 2 },
-    { q: "La dimensione di uno spazio vettoriale:", o: ["(A) Non può essere 0", "(B) Cardinalità generatori", "(C) Dipende dalla base", "(D) Massimo numero di indipendenti"], c: 3 },
+    { q: "La dimensione di uno spazio vettoriale:", o: ["(A) Non può essere 0", "(B) Cardinalità generatori", "(C) Dipende dalla base", "(D) è il massimo numero di vettori linearmente indipendenti dello spazio"], c: 3 },
     { q: "Dati U=L((3,1,0),(0,0,1)) e W=L((3,1,5)) in R³:", o: ["(A) dim(U+W)=3", "(B) dim(U ∩ W)=1", "(C) U e W in somma diretta", "(D) U ∩ W=0"], c: 2 },
-    { q: "Dato un insieme di generatori X di vettori linearmente dipendenti:", o: ["(A) esiste un sottoinsieme base", "(B) esiste v tale che somma diretta", "(C) X completato a base", "(D) |X| <= n"], c: 0 },
+    { q: "Dato un insieme di generatori X di vettori linearmente dipendenti:", o: ["(A) esiste un sottoinsieme di X che costituisce una base per lo spazio vettoriale", "(B) esiste v tale che somma diretta", "(C) X completato a base", "(D) |X| <= n"], c: 0 },
 	
 	// --- FILE: 10.ProdottoScalare ---
     { q: "Il prodotto scalare tra due vettori u e v:", o: ["(A) è sempre positivo", "(B) è simmetrico u·v=v·u", "(C) ci restituisce uno scalare che indica la distanza tra u e v", "(D) è uguale a 0 se e solo se uno dei due vettori è 0"], c: 1 },
@@ -156,12 +171,12 @@ const quizDatabase = [
     { q: "Quali sono i valori di k tali che il vettore (k,-2,3) abbia norma pari a 5?", o: ["(A) k=0 e k=2", "(B) k=±4", "(C) k=-2 e k=6", "(D) k=6 e k=-5"], c: 2 },
     { q: "Quale delle seguenti affermazioni è corretta (prodotto scalare)?", o: ["(A) Il prodotto scalare di due vettori dipendenti è nullo", "(B) Se due vettori hanno somma 0, il loro prodotto scalare è negativo", "(C) Il prodotto scalare tra elementi di una base è 0", "(D) ||u+v|| >= ||u||+||v||"], c: 1 },
     { q: "Il prodotto scalare tra due vettori (1,-1,...) e (1,1,...):", o: ["(A) è pari a zero sse i vettori sono indipendenti", "(B) è pari a zero se consideriamo i vettori (1,-1,1,-1...) e (1,1,1,1...)", "(C) ci dice se l'insieme può essere completato a base", "(D) è compatibile rispetto alla somma per scalare"], c: 1 },
-    { q: "Siano u e v due vettori aventi la stessa norma. Allora ||u-v|| è massima se:", o: ["(A) i due vettori sono ortogonali", "(B) ||u-v||=0 per ogni scelta", "(C) u=-v", "(D) Non si può dire"], c: 2 },
+    { q: "Siano u e v due vettori aventi la stessa norma. Allora:", o: ["(A) ||u-v|| è massima se i due vettori sono ortogonali", "(B) ||u-v||=0 per ogni scelta di v e u", "(C)  ||u-v|| è massima se u=-v", "(D) Non si può dire"], c: 2 },
 
     // --- FILE: 11.Dispensa_Proiezione_Ortogonale ---
     { q: "La proiezione ortogonale di un vettore:", o: ["(A) è uno scalare positivo", "(B) non dipende dall'angolo", "(C) è tale che proj(u+w) = proju + projw", "(D) non è mai il vettore nullo"], c: 2 },
-    { q: "Quale delle seguenti affermazioni è corretta (Gram-Schmidt)?", o: ["(A) Trasforma una base nella base canonica", "(B) Basta dividere ogni vettore per la norma per ortonormalizzare", "(C) L'algoritmo si può applicare a qualunque base", "(D) Vettori ortogonali formano sempre una base"], c: 2 },
-    { q: "Quale delle seguenti affermazioni è corretta (Proiezione)?", o: ["(A) Un insieme di generatori ortonormali è necessariamente una base", "(B) proju u per ogni u", "(C) La proiezione ortogonale proju è ortogonale al vettore u", "(D) u proju u=v"], c: 0 },
+    { q: "Quale delle seguenti affermazioni è corretta?", o: ["(A) Applicare l’algoritmo di Gram-Schmidt permette di trasformare una base nella base canonica", "(B) Basta dividere ogni vettore per la norma per ortonormalizzare", "(C) L'algoritmo si può applicare a qualunque base", "(D) Vettori ortogonali formano sempre una base"], c: 2 },
+    { q: "Quale delle seguenti affermazioni è corretta?", o: ["(A) Un insieme di generatori ortonormali è necessariamente una base", "(B) proju u per ogni u", "(C) La proiezione ortogonale proju è ortogonale al vettore u", "(D) u proju u=v"], c: 0 },
     { q: "Quale delle seguenti è una base ortonormale di R3?", o: ["(A) {(1,-2,0),(2,1,0),(0,0,1)}", "(B) {(1,2,1), (1,-1,1), (0,0,1)}", "(C) {(-1,0,0), (0,1,0), (0,0,-1)}", "(D) Nessuna delle altre"], c: 2 },
     { q: "In R3 si consideri W=L((1,1,0),(0,1,1)). Allora Wp è:", o: ["(A) Wp = L(5,-5,5)", "(B) solo il vettore nullo", "(C) Wp = L(0,1,0)", "(D) non ammette complemento"], c: 0 },
     { q: "Siano v=(2,-1,0) e u=(1,0,3). Qual è il prodotto vettoriale v x u?", o: ["(A) 4", "(B) (-3,6,1)", "(C) (1,3,-6)", "(D) (-3,-6,1)"], c: 3 },
@@ -243,64 +258,107 @@ const quizDatabase = [
     { q: "Se due matrici diagonalizzabili A e B sono simili alla stessa matrice diagonale D, allora:", o: ["(a) sono simili", "(b) hanno anche gli stessi autovettori", "(c) hanno determinante diverso da 0", "(d) esiste α tale che A=αB"], c: 0 }
 ];
 
-let currentIdx = 0; let score = 0; let state = "ASKING";
+let currentDatabase = [...originalDatabase];
+let currentIdx = 0; 
+let score = 0; 
+let state = "ASKING";
+let isRandom = false;
 
 function init() {
-    if (quizDatabase.length === 0) {
-        document.getElementById('q-text').innerText = "Attenzione: devi incollare le domande nel codice!";
+    if (originalDatabase.length === 0) {
+        document.getElementById('q-text').innerText = "Attenzione: database vuoto!";
         return;
     }
-    quizDatabase.sort(() => Math.random() - 0.5); // Rimescola per lo studio
-    document.getElementById('total-q').innerText = quizDatabase.length;
+    resetQuiz();
+}
+
+function toggleRandom() {
+    isRandom = !isRandom;
+    const btn = document.getElementById('mode-toggle');
+    if (isRandom) {
+        btn.innerText = "Ordine: Casuale";
+        btn.classList.add('active');
+    } else {
+        btn.innerText = "Ordine: Sequenziale";
+        btn.classList.remove('active');
+    }
+    resetQuiz();
+}
+
+function resetQuiz() {
+    currentIdx = 0;
+    score = 0;
+    document.getElementById('score').innerText = "0";
+    
+    // Gestione ordine
+    currentDatabase = [...originalDatabase];
+    if (isRandom) {
+        currentDatabase.sort(() => Math.random() - 0.5);
+    }
+    
+    document.getElementById('total-q').innerText = currentDatabase.length;
     render();
 }
 
 function render() {
-    const data = quizDatabase[currentIdx];
+    const data = currentDatabase[currentIdx];
     document.getElementById('q-text').innerText = (currentIdx + 1) + ". " + data.q;
     const container = document.getElementById('options');
-    container.innerHTML = ''; document.getElementById('feedback').innerText = '';
+    container.innerHTML = ''; 
+    document.getElementById('feedback').innerText = '';
     
     data.o.forEach((opt, i) => {
         const div = document.createElement('div');
-        div.className = 'option'; div.innerText = opt;
+        div.className = 'option'; 
+        div.innerText = opt;
         div.onclick = () => {
             if (state !== "ASKING") return;
-            const correct = quizDatabase[currentIdx].c;
-            const items = document.querySelectorAll('.option');
-            if (i === correct) {
-                div.classList.add('correct'); score++;
-                document.getElementById('feedback').innerText = "ESATTO!";
-                document.getElementById('feedback').style.color = "var(--success)";
-            } else {
-                div.classList.add('wrong'); items[correct].classList.add('correct');
-                document.getElementById('feedback').innerText = "SBAGLIATO!";
-                document.getElementById('feedback').style.color = "var(--error)";
-            }
-            document.getElementById('score').innerText = score;
-            document.getElementById('main-btn').innerText = "Prossima Domanda";
-            document.getElementById('main-btn').disabled = false;
-            state = "FEEDBACK";
+            checkAnswer(i);
         };
         container.appendChild(div);
     });
+
     document.getElementById('current-q').innerText = currentIdx + 1;
     document.getElementById('main-btn').innerText = "Scegli una risposta";
     document.getElementById('main-btn').disabled = true;
     state = "ASKING";
 }
 
+function checkAnswer(selectedIdx) {
+    const correct = currentDatabase[currentIdx].c;
+    const items = document.querySelectorAll('.option');
+    
+    if (selectedIdx === correct) {
+        items[selectedIdx].classList.add('correct');
+        score++;
+        document.getElementById('feedback').innerText = "ESATTO!";
+        document.getElementById('feedback').style.color = "var(--success)";
+    } else {
+        items[selectedIdx].classList.add('wrong');
+        items[correct].classList.add('correct');
+        document.getElementById('feedback').innerText = "SBAGLIATO!";
+        document.getElementById('feedback').style.color = "var(--error)";
+    }
+    
+    document.getElementById('score').innerText = score;
+    document.getElementById('main-btn').innerText = "Prossima Domanda";
+    document.getElementById('main-btn').disabled = false;
+    state = "FEEDBACK";
+}
+
 function handleAction() {
     if (state === "FEEDBACK") {
         currentIdx++;
-        if (currentIdx < quizDatabase.length) render();
-        else alert("Esercitazione finita! Punteggio: " + score + "/" + quizDatabase.length);
+        if (currentIdx < currentDatabase.length) {
+            render();
+        } else {
+            alert("Esercitazione finita! Punteggio finale: " + score + "/" + currentDatabase.length);
+            resetQuiz();
+        }
     }
 }
+
 window.onload = init;
 </script>
 </body>
 </html>
-
-
-
