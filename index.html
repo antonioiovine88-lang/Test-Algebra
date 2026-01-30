@@ -146,19 +146,19 @@ const originalDatabase = [
     { q: "Sia dato X=L((1,-1),(-3,3)) in R². Allora:", o: ["(A) X = L((1,-1))", "(B) 0 non appartiene a X", "(C) X = R2", "(D) (-1,-1) appartiene a L(X)"], c: 0 },
     { q: "Quale tra queste affermazione è corretta (differenza)?", o: ["(A) I piani sono spazi vettoriali", "(B) Differenza tra vettori di un sottospazio è nel sottospazio", "(C) Non più di tre indipendenti", "(D) L(v)!=L(w) sempre"], c: 1 },
     { q: "Sia G un insieme di generatori per V. Allora:", o: ["(A) G è indipendente", "(B) G è chiuso per comb. lin.", "(C) 0 non appartiene a G", "(D) L(G)=L(G U v) per ogni v in V"], c: 3 },
-    { q: "Quale tra questi non è uno (sotto) spazio vettoriale?", o: ["(A) L(0)", "(B) {(x+1,0)}", "(C) {a(3,1)}", "(D) R2"], c: 1 },
-    { q: "Un insieme di vettori X si dice linearmente dipendente se:", o: ["(A) esistono due vettori nella chiusura", "(B) 0 è combinazione lineare", "(C) v è combinazione lineare", "(D) L(X)=L(X\\{v}) per qualche v in X"], c: 3 },
+    { q: "Quale tra questi non è uno (sotto) spazio vettoriale?", o: ["(A) L(0)", "(B) l'insieme {(x + 1, 0) | x ∈ R} ⊆ R2", "(C) {a(3,1)}", "(D) R2"], c: 1 },
+    { q: "Un insieme di vettori X si dice linearmente dipendente se:", o: ["(A) esistono due vettori nella chiusura", "(B) il vettore 0 è combinazione lineare dei vettori in X", "(C) v è combinazione lineare", "(D) L(X)=L(X\\{v}) per qualche v in X"], c: 1 },
 
     // --- FILE: 9.Dipensa_Base_Dimensione ---
     { q: "Se B è una base di uno spazio vettoriale, allora:", o: ["(A) non esiste comb. lin. nulla", "(B) se v appartiene a B, allora −v non appartiene a B", "(C) 0 appartiene a B", "(D) B è costituito dai vettori canonici"], c: 1 },
     { q: "Dati due sottospazi W1 e W2 di V:", o: ["(A) L'unione non può essere sottospazio", "(B) W1 dentro W2", "(C) La somma è V", "(D) L'intersezione contiene il vettore nullo 0"], c: 3 },
-    { q: "La formula di Grassmann:", o: ["(A) relaziona le basi", "(B) dim(W1+W2) >= dimW1+dimW2", "(C) dimW1+dimW2=dim(W1+W2)+dim(W1∩W2)", "(D) somma diretta sse intersezione=0"], c: 3 },
+    { q: "La formula di Grassmann:", o: ["(A) relaziona le basi", "(B) dim(W1+W2) >= dimW1+dimW2", "(C) dimW1+dimW2=dim(W1+W2)+dim(W1∩W2)", "(D)  permette di dire che se per due sottospazi W1 e W2 vale dim(W1 ∩W2) = 0, allora la somma W1 + W2 `e diretta"], c: 3 },
     { q: "In dim 15, U dim 8 e W dim 7. Allora:", o: ["(A) Base U da W + 1 vettore", "(B) 8 <= dim(U+W) <= 15", "(C) V != U+W", "(D) Nessuna"], c: 1 },
     { q: "Dati due sottospazi vettoriali U e W, allora:", o: ["(A) se U c W, ogni base di U completata a W", "(B) U+W dim almeno dimU+dimW", "(C) U ∩ W = 0", "(D) vettore non in U+W"], c: 0 },
     { q: "Quale delle seguenti è una base di R³?", o: ["(A) {(0,1,8), (1,0,3), (1,1,0)}", "(B) L({(1,0,1), (0,1,0), (0,0,1)})", "(C) {(1,0,0), (2,3,1), (-1,4,5), (0,1,5)}", "(D) {(2,1,1), (-1,2,0), (1,3,1)}"], c: 0 },
-    { q: "Quale delle seguenti affermazioni è corretta (completamento)?", o: ["(A) Sempre completare a base", "(B) Somma diretta non si intersecano", "(C) In dim n, n+1 vettori sempre dipendenti", "(D) Base chiusa linearmente"], c: 2 },
+    { q: "Quale delle seguenti affermazioni è corretta (completamento)?", o: ["(A) Sempre completare a base", "(B) Somma diretta non si intersecano", "(C) In dim n, n+1 vettori saranno sempre lineramenti dipendenti", "(D) Base chiusa linearmente"], c: 2 },
     { q: "La dimensione di uno spazio vettoriale:", o: ["(A) Non può essere 0", "(B) Cardinalità generatori", "(C) Dipende dalla base", "(D) è il massimo numero di vettori linearmente indipendenti dello spazio"], c: 3 },
-    { q: "Dati U=L((3,1,0),(0,0,1)) e W=L((3,1,5)) in R³:", o: ["(A) dim(U+W)=3", "(B) dim(U ∩ W)=1", "(C) U e W in somma diretta", "(D) U ∩ W=0"], c: 2 },
+    { q: "Dati U=L((3,1,0),(0,0,1)) e W=L((3,1,5)) in R³:", o: ["(A) dim(U+W)=3", "(B) dim(U ∩ W)=1", "(C) U e W in somma diretta", "(D) U ∩ W=0"], c: 1 },
     { q: "Dato un insieme di generatori X di vettori linearmente dipendenti:", o: ["(A) esiste un sottoinsieme di X che costituisce una base per lo spazio vettoriale", "(B) esiste v tale che somma diretta", "(C) X completato a base", "(D) |X| <= n"], c: 0 },
 	
 	// --- FILE: 10.ProdottoScalare ---
